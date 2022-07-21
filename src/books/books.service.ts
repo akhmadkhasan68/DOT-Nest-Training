@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { BookRequestDto } from './dto/BookRequestDto';
+import { Book } from './entity/book.entity';
 
 type bookObject = {
   id: number;
@@ -16,19 +18,8 @@ export class BooksService {
     return this.books;
   }
 
-  createBook(
-    name: string,
-    author: string,
-    totalPage: number,
-    category: string,
-  ): any {
-    this.books.push({
-      id: Math.random(),
-      name,
-      author,
-      totalPage,
-      category,
-    });
+  createBook(data: BookRequestDto): any {
+    Book.create(data);
 
     return true;
   }
