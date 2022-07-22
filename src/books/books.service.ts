@@ -1,20 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { title } from 'process';
 import { Category } from 'src/categories/entity/category.entity';
 import { Repository } from 'typeorm';
 import { BookFilterDto } from './dto/BookFilterDto';
 import { BookRequestDto } from './dto/BookRequestDto';
 import { Book } from './entity/book.entity';
-
-type bookObject = {
-  id: number;
-  name: string;
-  author: string;
-  totalPage: number;
-  category: string;
-};
-
 @Injectable()
 export class BooksService {
   constructor(

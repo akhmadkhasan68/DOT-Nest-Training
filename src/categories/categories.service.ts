@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoryRequestDto } from './dto/CategoryRequestDto';
@@ -21,12 +21,16 @@ export class CategoriesService {
 
   async getDetailCategory(id: string): Promise<Category> {
     try {
-      return await this.categoryRepository.findOne({
+      const data = await this.categoryRepository.findOne({
         where: { id },
         relations: { books: true },
       });
+
+      if (!data) throw new NotFoundException('Data not found!');
+
+      return data;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
@@ -48,7 +52,7 @@ export class CategoriesService {
 
   async deleteCategory(id: string): Promise<any> {
     try {
-      return await this.categoryRepository.delete({ id });
+      return await this.categoryRepository.delete(id);
     } catch (error) {
       console.log(error);
     }
