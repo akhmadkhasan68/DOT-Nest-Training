@@ -4,7 +4,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,7 +25,9 @@ export class Book extends BaseEntity {
   @Column()
   totalPage: number;
 
-  @OneToOne((type) => Category)
+  @ManyToOne(() => Category, (category) => category.id, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   category: Category;
 }

@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class BookRequestDto {
   @IsNotEmpty()
@@ -8,13 +9,15 @@ export class BookRequestDto {
   author: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
+  @Type(() => Number)
   year: number;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
+  @Type(() => Number)
   totalPage: number;
 
   @IsNotEmpty()
-  categoryId: number;
+  categoryId: string;
 }
