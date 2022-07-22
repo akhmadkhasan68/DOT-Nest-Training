@@ -13,15 +13,18 @@ export class CategoriesService {
 
   async getAllCategories(): Promise<Category[]> {
     try {
-      return await this.categoryRepository.find();
+      return await this.categoryRepository.find({ relations: { books: true } });
     } catch (error) {
-      console.log(error);
+      throw new Error('Error while loading data');
     }
   }
 
   async getDetailCategory(id: string): Promise<Category> {
     try {
-      return await this.categoryRepository.findOneBy({ id });
+      return await this.categoryRepository.findOne({
+        where: { id },
+        relations: { books: true },
+      });
     } catch (error) {
       console.log(error);
     }

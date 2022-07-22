@@ -23,7 +23,14 @@ export class BooksService {
   ) {}
 
   async getAllBooks(params: BookFilterDto): Promise<Book[]> {
-    return await this.bookRepository.find();
+    return await this.bookRepository.find({ relations: { category: true } });
+  }
+
+  async getDetailBook(id: string): Promise<Book> {
+    return await this.bookRepository.findOne({
+      where: { id },
+      relations: { category: true },
+    });
   }
 
   async createBook(data: BookRequestDto): Promise<any> {
@@ -65,12 +72,4 @@ export class BooksService {
       console.log(error);
     }
   }
-  // private books: bookObject[] = [];
-  // getAllBooks(): bookObject[] {
-  //   return this.books;
-  // }
-  // createBook(data: BookRequestDto): any {
-  //   Book.create(data);
-  //   return true;
-  // }
 }

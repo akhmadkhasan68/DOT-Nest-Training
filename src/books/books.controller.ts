@@ -21,6 +21,11 @@ export class BooksController {
     return await this.bookService.getAllBooks(params);
   }
 
+  @Get('/:id')
+  async getDetailBook(@Param('id') id: string) {
+    return await this.bookService.getDetailBook(id);
+  }
+
   @Post()
   createBook(@Body() data: BookRequestDto) {
     return this.bookService.createBook(data);
