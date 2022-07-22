@@ -19,7 +19,7 @@ type bookObject = {
 export class BooksService {
   constructor(
     @InjectRepository(Book)
-    private bookRepository: Repository<Book>,
+    private readonly bookRepository: Repository<Book>,
   ) {}
 
   async getAllBooks(params: BookFilterDto): Promise<Book[]> {
