@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/categories/entity/category.entity';
-import { Repository } from 'typeorm';
 import { BookFilterDto } from './dto/BookFilterDto';
 import { BookRequestDto } from './dto/BookRequestDto';
 import { Book } from './entity/book.entity';
+import { BooksRepository } from './repository/books.repository';
 @Injectable()
 export class BooksService {
-  constructor(
-    @InjectRepository(Book)
-    private readonly bookRepository: Repository<Book>,
-  ) {}
+  constructor(private readonly bookRepository: BooksRepository) {}
 
   async getAllBooks(params: BookFilterDto): Promise<Book[]> {
     return await this.bookRepository.find({ relations: { category: true } });
