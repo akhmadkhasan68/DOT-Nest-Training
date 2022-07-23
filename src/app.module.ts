@@ -5,6 +5,8 @@ import { BooksModule } from './books/books.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './categories/categories.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -28,6 +30,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
     }),
+    AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
