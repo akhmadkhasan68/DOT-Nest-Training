@@ -5,8 +5,11 @@ import { BooksModule } from './books/books.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './categories/categories.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { Book } from './books/entity/book.entity';
+import { Category } from './categories/entity/category.entity';
 import { UsersModule } from './users/users.module';
+import { Users } from './users/entity/users.entity';
+import { AuthModule } from './auth/auth.module';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -20,7 +23,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [`${__dirname}/**/*.entity.{ts,js}`],
+        entities: [Book, Category, Users],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -30,8 +33,8 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
     }),
-    AuthModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
