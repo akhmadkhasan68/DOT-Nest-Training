@@ -10,6 +10,7 @@ import { Category } from './categories/entity/category.entity';
 import { UsersModule } from './users/users.module';
 import { Users } from './users/entity/users.entity';
 import { AuthModule } from './auth/auth.module';
+import { RefreshTokens } from './auth/entity/refresh-token.entity';
 @Module({
   controllers: [AppController],
   providers: [AppService],
@@ -23,7 +24,7 @@ import { AuthModule } from './auth/auth.module';
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [Book, Category, Users],
+        entities: [Book, Category, Users, RefreshTokens],
         synchronize: true,
       }),
       inject: [ConfigService],

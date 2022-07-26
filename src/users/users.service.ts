@@ -21,4 +21,14 @@ export class UsersService {
       },
     });
   }
+
+  async validateUser(username: string, password: string): Promise<Users> {
+    const user = await this.usersRepository.findOne({
+      where: [{ username }, { email: username }],
+    });
+
+    if (!user || !user.validatePassword(password)) return null;
+
+    return user;
+  }
 }
