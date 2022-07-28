@@ -15,12 +15,12 @@ import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 import { RefreshTokenService } from './refresh-token.service';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { RefreshToken } from './entity/refresh-token.entity';
+import { LoginInterface } from 'src/interfaces/login.interface';
+import { RefreshTokenInterface } from 'src/interfaces/refresh-token.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenService,
@@ -28,7 +28,7 @@ export class AuthService {
     private readonly refreshTokenRepository: Repository<RefreshToken>,
   ) {}
 
-  async login(loginDto: LoginDto): Promise<any> {
+  async login(loginDto: LoginDto): Promise<LoginInterface> {
     const { username, password } = loginDto;
     const user = await this.userService.vaidateUser(username, password);
     if (!user)
@@ -39,12 +39,12 @@ export class AuthService {
     const accessToken = await this.createAccessToken(user);
     const refreshToken = await this.createRefreshToken(user);
 
-    return { accessToken, refreshToken };
+    return { user, accessToken, refreshToken };
   }
 
   async refreshAccessToken(
     refreshAccessTokenDto: RefreshAccessTokenDto,
-  ): Promise<{ access_token: string }> {
+  ): Promise<RefreshTokenInterface> {
     const { refresh_token } = refreshAccessTokenDto;
     const payload = await this.decodeToken(refresh_token);
     const refreshToken = await this.refreshTokenRepository.findOne({
@@ -59,7 +59,7 @@ export class AuthService {
 
     const accessToken = await this.createAccessToken(refreshToken.user);
 
-    return { access_token: accessToken };
+    return { accessToken };
   }
 
   async decodeToken(token: string): Promise<any> {
