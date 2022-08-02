@@ -6,6 +6,8 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entity/book.entity';
 import { User } from '../user/entity/user.entity';
+import { QueryListDto } from '../../global-dto/query-list.dto';
+import { ListResult } from 'src/interfaces/listresult.interface';
 
 @Injectable()
 export class BookService {
@@ -17,8 +19,15 @@ export class BookService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async getAllBooks(user: User): Promise<Book[]> {
-    return this.bookRepository.find({
+  async getAllBooks(
+    user: User,
+    query: QueryListDto,
+  ): Promise<ListResult<Book>> {
+    const { page, pageSize } = query;
+    const [list, count] = await this.bookRepository.findAndCount({
+      order: { id: 'DESC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       where: {
         user: {
           id: user.id,
@@ -26,6 +35,13 @@ export class BookService {
       },
       relations: ['user'],
     });
+
+    return {
+      list,
+      count,
+      page,
+      pageSize,
+    };
   }
 
   async getDetailBook(id: string, user: User): Promise<Book> {

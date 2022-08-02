@@ -6,10 +6,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/guards/jwt.guard';
+import { ListResult } from 'src/interfaces/listresult.interface';
 import { ResponseInterface } from 'src/interfaces/response.interface';
+import { QueryListDto } from '../../global-dto/query-list.dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -21,8 +24,10 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  async getAllCategories(): Promise<ResponseInterface<Category[]>> {
-    const data = await this.categoryService.getAllCategories();
+  async getAllCategories(
+    @Query() query: QueryListDto,
+  ): Promise<ResponseInterface<ListResult<Category>>> {
+    const data = await this.categoryService.getAllCategories(query);
     return { message: 'OK', data };
   }
 

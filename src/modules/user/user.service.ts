@@ -5,6 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
+import { QueryListDto } from 'src/global-dto/query-list.dto';
+import { ListResult } from 'src/interfaces/listresult.interface';
+import { Category } from '../category/entity/category.entity';
 
 @Injectable()
 export class UserService {
@@ -12,8 +15,20 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+  async getAllUsers(query: QueryListDto): Promise<ListResult<Category>> {
+    const { page, pageSize } = query;
+    const [list, count] = await this.userRepository.findAndCount({
+      order: { id: 'DESC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      list,
+      count,
+      page,
+      pageSize,
+    };
   }
 
   async getDetailUser(id: string): Promise<User> {

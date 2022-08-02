@@ -6,14 +6,17 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { JwtGuard } from 'src/guards/jwt.guard';
+import { ListResult } from 'src/interfaces/listresult.interface';
 import { ResponseInterface } from 'src/interfaces/response.interface';
 import { User } from '../user/entity/user.entity';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { QueryListDto } from '../../global-dto/query-list.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entity/book.entity';
 
@@ -23,8 +26,11 @@ export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  async getAllBooks(@GetUser() user: User): Promise<ResponseInterface<Book[]>> {
-    const data = await this.bookService.getAllBooks(user);
+  async getAllBooks(
+    @GetUser() user: User,
+    @Query() query: QueryListDto,
+  ): Promise<ResponseInterface<ListResult<Book>>> {
+    const data = await this.bookService.getAllBooks(user, query);
     return { message: 'OK', data };
   }
 
