@@ -1,5 +1,4 @@
 import { Body, Controller, Param, Post, Put } from '@nestjs/common';
-import { GetUser } from 'src/decorators/get-user.decorator';
 import { LoginInterface } from 'src/interfaces/login.interface';
 import { RefreshTokenInterface } from 'src/interfaces/refresh-token.interface';
 import { ResponseInterface } from 'src/interfaces/response.interface';

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ResponseInterface } from 'src/interfaces/response.interface';
 import { ResponseInterseptorInterface } from '../interfaces/response-interseptor.interface';
 
 @Injectable()
