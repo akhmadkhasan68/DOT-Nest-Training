@@ -45,7 +45,7 @@ export class BookService {
   }
 
   async getDetailBook(id: string, user: User): Promise<Book> {
-    const data = await this.bookRepository.findOne({
+    const data = await this.bookRepository.findOneOrFail({
       where: {
         id,
         user: {
@@ -55,15 +55,13 @@ export class BookService {
       relations: ['user'],
     });
 
-    if (!data) throw new NotFoundException('Data not found!');
-
     return data;
   }
 
   async createBook(createBookDto: CreateBookDto, user: User): Promise<Book> {
     const data = Object.assign(createBookDto, {
       user: user,
-      category: await this.categoryRepository.findOneBy({
+      category: await this.categoryRepository.findOneByOrFail({
         id: createBookDto.categoryId,
       }),
     });
@@ -78,7 +76,7 @@ export class BookService {
   ): Promise<UpdateResult> {
     const data = Object.assign(updateBookDto, {
       user: user,
-      category: await this.categoryRepository.findOneBy({
+      category: await this.categoryRepository.findOneByOrFail({
         id: updateBookDto.categoryId,
       }),
     });

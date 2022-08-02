@@ -32,7 +32,7 @@ export class UserService {
   }
 
   async getDetailUser(id: string): Promise<User> {
-    const data = await this.userRepository.findOneBy({ id: id });
+    const data = await this.userRepository.findOneByOrFail({ id: id });
     if (!data) throw new NotFoundException('Data not found!');
 
     return data;
@@ -63,13 +63,12 @@ export class UserService {
   }
 
   async vaidateUser(username: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOneBy([
+    const user = await this.userRepository.findOneByOrFail([
       {
         username,
       },
       { email: username },
     ]);
-    if (!user) throw new NotFoundException('User not found!');
 
     const validatePassword = await user.validatePassword(password);
 
