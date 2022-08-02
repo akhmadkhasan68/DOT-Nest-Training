@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
@@ -39,26 +39,21 @@ export class UserService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, username, password } = createUserDto;
+    const { password } = createUserDto;
     const salt = await bcrypt.genSalt();
-    const createUser = this.userRepository.create();
-    createUser.name = name;
-    createUser.email = email;
-    createUser.username = username;
-    createUser.password = await bcrypt.hash(password, salt);
-    createUser.salt = salt;
+    const data = Object.assign(createUserDto, {
+      password: await bcrypt.hash(password, salt),
+      salt: salt,
+    });
 
-    return await this.userRepository.save(createUser);
+    return await this.userRepository.create(data).save();
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const { name, email, username } = updateUserDto;
-    const updatedData = await this.getDetailUser(id);
-    updatedData.name = name;
-    updatedData.email = email;
-    updatedData.username = username;
-
-    return await this.userRepository.save(updatedData);
+  async updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateResult> {
+    return await this.userRepository.update({ id }, updateUserDto);
   }
 
   async deleteUser(id: string): Promise<any> {

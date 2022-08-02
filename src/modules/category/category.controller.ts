@@ -12,6 +12,7 @@ import {
 import { JwtGuard } from 'src/guards/jwt.guard';
 import { ListResult } from 'src/interfaces/listresult.interface';
 import { ResponseInterface } from 'src/interfaces/response.interface';
+import { UpdateResult } from 'typeorm';
 import { QueryListDto } from '../../global-dto/query-list.dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -51,7 +52,7 @@ export class CategoryController {
   async updateCategoryDto(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<ResponseInterface<Category>> {
+  ): Promise<ResponseInterface<UpdateResult>> {
     const data = await this.categoryService.updateCategory(
       id,
       updateCategoryDto,
