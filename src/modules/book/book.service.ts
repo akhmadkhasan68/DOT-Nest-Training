@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../category/entity/category.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entity/book.entity';
@@ -61,37 +61,29 @@ export class BookService {
   }
 
   async createBook(createBookDto: CreateBookDto, user: User): Promise<Book> {
-    const { name, author, totalPages, year, categoryId } = createBookDto;
-    const createBook = this.bookRepository.create();
-    createBook.name = name;
-    createBook.author = author;
-    createBook.totalPages = totalPages;
-    createBook.year = year;
-    createBook.category = await this.categoryRepository.findOneBy({
-      id: categoryId,
+    const data = Object.assign(createBookDto, {
+      user: user,
+      category: await this.categoryRepository.findOneBy({
+        id: createBookDto.categoryId,
+      }),
     });
-    createBook.user = user;
 
-    return await this.bookRepository.save(createBook);
+    return await this.bookRepository.create(data).save();
   }
 
   async updateBook(
     id: string,
     user: User,
     updateBookDto: UpdateBookDto,
-  ): Promise<Book> {
-    const { name, author, totalPages, year, categoryId } = updateBookDto;
-    const updateBook = await this.getDetailBook(id, user);
-    updateBook.name = name;
-    updateBook.author = author;
-    updateBook.totalPages = totalPages;
-    updateBook.year = year;
-    updateBook.category = await this.categoryRepository.findOneBy({
-      id: categoryId,
+  ): Promise<UpdateResult> {
+    const data = Object.assign(updateBookDto, {
+      user: user,
+      category: await this.categoryRepository.findOneBy({
+        id: updateBookDto.categoryId,
+      }),
     });
-    updateBook.user = user;
-
-    return await this.bookRepository.save(updateBook);
+    delete data.categoryId;
+    return await this.bookRepository.update({ id }, data);
   }
 
   async deleteBook(id: string, user: User): Promise<any> {

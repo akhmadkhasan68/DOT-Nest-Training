@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryListDto } from 'src/global-dto/query-list.dto';
 import { ListResult } from 'src/interfaces/listresult.interface';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entity/category.entity';
@@ -44,22 +44,14 @@ export class CategoryService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {
-    const { name } = createCategoryDto;
-    const createCategory = this.categoryRepository.create();
-    createCategory.name = name;
-
-    return await this.categoryRepository.save(createCategory);
+    return await this.categoryRepository.create(createCategoryDto).save();
   }
 
   async updateCategory(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Category> {
-    const { name } = updateCategoryDto;
-    const updatedData = await this.getDetailCategory(id);
-    updatedData.name = name;
-
-    return await updatedData.save();
+  ): Promise<UpdateResult> {
+    return await this.categoryRepository.update({ id }, updateCategoryDto);
   }
 
   async deleteCategory(id: string): Promise<any> {

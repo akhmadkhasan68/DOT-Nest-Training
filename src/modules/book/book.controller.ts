@@ -19,6 +19,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { QueryListDto } from '../../global-dto/query-list.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entity/book.entity';
+import { UpdateResult } from 'typeorm';
 
 @Controller('book')
 @UseGuards(JwtGuard)
@@ -57,7 +58,7 @@ export class BookController {
     @Param('id') id: string,
     @Body() updateBookDto: UpdateBookDto,
     @GetUser() user: User,
-  ): Promise<ResponseInterface<Book>> {
+  ): Promise<ResponseInterface<UpdateResult>> {
     const data = await this.bookService.updateBook(id, user, updateBookDto);
     return { message: 'OK', data };
   }
