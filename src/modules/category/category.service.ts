@@ -31,7 +31,7 @@ export class CategoryService {
   }
 
   async getDetailCategory(id: string): Promise<Category> {
-    const data = await this.categoryRepository.findOne({
+    const data = await this.categoryRepository.findOneOrFail({
       where: { id },
       relations: ['books'],
     });
